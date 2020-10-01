@@ -1,0 +1,18 @@
+#include "lib.h"
+
+int gcd(int a, int b)
+{
+    if (a == 0)
+        return b;
+    return gcd(b % a, a);
+}
+ 
+// A simple method to evaluate Euler Totient Function
+int phi(int n)
+{
+    int result = 1;
+    for (int i = 2; i < n; i++)
+        if (gcd(i, n) == 1)
+            result++;
+    return result;
+}
