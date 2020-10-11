@@ -1,81 +1,89 @@
 #include <iostream>
 #include <string>
 #include "lib.h"
-const char EOLN = '\n';
-const char YES_CHAR = 'Y';
-const char NO_CHAR = 'N';
-const int LEFT_BOUND = -1000000000;
-const int RIGHT_BOUND = +1000000000;
-const std::string ABOUT_MESSAGE = "Euler’s Totient Function";
-const std::string CONTINUE_MESSAGE = "Continue? (Y/N)>";
-const std::string INCORRECT_MESSAGE = "Input is incorrect. Try again>";
-const std::string INPUT_MESSAGE = "Input an integer > ";
-const std::string OUT_OF_BOUNDS_MESSAGE = "This number is out of bounds";
-const std::string OUTPUT_MESSAGE = "Result: ";
-const std::string SKIP_CHARACTERS = " ";
 
-void ClearInputStream(std::istream &in)
+const std::string ABOUT_MESSAGE = "Euler’s Totient Function";
+const std::string ENTER_MESSAGE = "Enter non-zero number> ";
+const std::string INCORRECT_MESSAGE = "Incorrect data";
+const std::string CONTINUE_MESSAGE = "Continue?(Y/N)> ";
+const std::string YES_ANSWER = "Y";
+const std::string NO_ANSWER = "N";
+const std::string INCORRECT_ANSWER_MESSAGE = "Incorrect data";
+
+typedef INT (*COUNT_DIVISORS)(CONST INT);
+
+bool is_number(const std::string &s)
 {
-    in.clear();
-    while (in.peek() != EOLN && in.peek() != EOF)
+    if (s.empty())
+        return false;
+    for (int i = 0; i < s.length(); ++i)
     {
-        in.get();
+        if (i == 0 && !(s[i] == '-' || isdigit(s[i])))
+        {
+            return false;
+        }
+        else if (i != 0 && !isdigit(s[i]))
+        {
+            return false;
+        }
     }
+    return true;
 }
-int Seek(std::istream &in)
+
+int get_number(const std::string &s)
 {
-    while (in.peek() != EOLN &&
-           SKIP_CHARACTERS.find((char)in.peek()) !=
-               std::string::npos)
-    {
-        in.get();
-    }
-    return in.peek();
+    return std::stoi(s);
 }
-bool CheckBounds(int n)
-{
-    bool ok = (LEFT_BOUND <= n && n <= RIGHT_BOUND);
-    if (!ok)
-    {
-        std::cout << OUT_OF_BOUNDS_MESSAGE << "[" << LEFT_BOUND << ", " << RIGHT_BOUND << "] " << std::endl;
-    }
-    return ok;
-}
-int ReadInt(std::istream &in)
-{
-    std::cout << INPUT_MESSAGE;
-    int ans;
-    in >> ans;
-    while (!in || Seek(in) != EOLN || !CheckBounds(ans))
-    {
-        ClearInputStream(in);
-        std::cout << INCORRECT_MESSAGE;
-        in >> ans;
-    }
-    return ans;
-}
-bool NeedContinue(std::istream &in)
-{
-    std::cout << CONTINUE_MESSAGE;
-    char ans;
-    in >> ans;
-    while (!in || Seek(in) != EOLN || ans != YES_CHAR && ans != NO_CHAR)
-    {
-        ClearInputStream(in);
-        std::cout << INCORRECT_MESSAGE;
-        in >> ans;
-    }
-    return ans == YES_CHAR;
-}
+
 int main()
 {
-    std::cout << ABOUT_MESSAGE << std::endl;
-    bool cont = true;
-    while (cont)
-    {
-        int a = ReadInt(std::cin);
-        std::cout << OUTPUT_MESSAGE << phi(a) << std::endl;
-        cont = NeedContinue(std::cin);
+        std::cout << FEATURE_MESSAGE << "\n";
+
+        boolean does_continue = true;
+        while (does_continue)
+        {
+            std::string str;
+            std::cout << ENTER_MESSAGE;
+            std::cin >> str;
+            if (is_number(str))
+            {
+                int number = get_number(str);
+                if (number != 0)
+                {
+                    std::cout << phi(number) << "\n";
+                }
+                else
+                {
+                    std::cout << INCORRECT_MESSAGE << "\n";
+                }
+            }
+            else
+            {
+                std::cout << INCORRECT_MESSAGE << "\n";
+            }
+
+            while (true)
+            {
+                std::string answer;
+                std::cout << CONTINUE_MESSAGE;
+                std::cin >> answer;
+                std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+
+                if (answer == NO_ANSWER)
+                {
+                    does_continue = false;
+                    break;
+                }
+                else if (answer == YES_ANSWER)
+                {
+                    break;
+                }
+                else
+                {
+                    std::cout << INCORRECT_ANSWER_MESSAGE << "\n";
+                }
+            }
+        }
+        FreeLibrary(hDLL);
     }
-    return 0;
 }
