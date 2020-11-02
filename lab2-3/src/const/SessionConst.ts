@@ -1,1 +1,0 @@
-export const SESSION_CHECK_TIMEOUT = 1000;
