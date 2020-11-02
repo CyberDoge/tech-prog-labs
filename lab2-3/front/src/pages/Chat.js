@@ -1,14 +1,21 @@
 import {Button, Grid} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import primarySocket from "../utils/Socket";
 import React, {useEffect, useState} from "react";
+import {primarySocket} from "../App";
 
 const Chat = () => {
   const [messageText, setMessageText] = useState("");
   const [messages, setMessage] = useState([]);
-  useEffect(() => {
-    primarySocket.chatMessageHandler = (message) => setMessage([...messages, message])
+  useEffect(()=> {
+    primarySocket.notYourTurnHandler = () => {
+      alert("not your turn")
+    }
   }, [])
+  useEffect(() => {
+    primarySocket.chatMessageHandler = (message) => {
+      setMessage([...messages, message])
+    }
+  }, [messages])
   const sendMessage = () => {
     primarySocket.sendChatMessage((res, error) => {
       setMessage([...messages, error || res.data]);

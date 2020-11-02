@@ -1,8 +1,8 @@
 import {Button, Grid, Typography} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import primarySocket from "../utils/Socket";
 import {useHistory} from "react-router-dom";
+import {primarySocket} from "../App";
 
 const useStyle = makeStyles({
 })

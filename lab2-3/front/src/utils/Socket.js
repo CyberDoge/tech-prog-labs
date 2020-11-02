@@ -15,6 +15,14 @@ class Socket {
     this.chatMessage = handler;
   }
 
+  set notYourTurnHandler(handler) {
+    this.notYourTurn = handler;
+  }
+
+  set onOpenHandler(handler) {
+    this.socket.onopen = handler;
+  }
+
   send = (handler, routePath, data) => {
     const req = {requestId: `${routePath}${reqId++}`, routePath, data}
     this.queue[req.requestId] = handler;
@@ -51,10 +59,10 @@ class Socket {
       this.chatMessage("another: " + data.data)
     } else if (data.event === "message_delivered") {
       this.chatMessage("me: " + data.data)
+    }else if (data.event === "not_your_turn") {
+      this.notYourTurn();
     }
   }
 }
 
-
-const primarySocket = new Socket();
-export default primarySocket;
+export default Socket;
