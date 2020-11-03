@@ -2,11 +2,12 @@ import {Button, Grid} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import React, {useEffect, useState} from "react";
 import {primarySocket} from "../App";
+import Game from "./Game";
 
 const Chat = () => {
   const [messageText, setMessageText] = useState("");
   const [messages, setMessage] = useState([]);
-  useEffect(()=> {
+  useEffect(() => {
     primarySocket.notYourTurnHandler = () => {
       alert("not your turn")
     }
@@ -24,12 +25,7 @@ const Chat = () => {
   return (
     <Grid container direction={"column"} justify={"center"} alignContent={"center"}>
       <Grid style={{marginTop: 40}} xs={7} spacing={2} container direction={"column"} item>
-        {messages.map((message) => (
-            <Grid item key={message}>
-              {message}
-            </Grid>
-          )
-        )}
+        <Game/>
       </Grid>
       <Grid item spacing={3} container>
         <Grid xs={9} item>
