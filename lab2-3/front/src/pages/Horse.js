@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
 const Horse = ({x, y, id, enemy, selected, onClick}) => {
   const classes = useStyles({selected});
   return (
-    <div onClick={onClick && onClick(id)} className={classes.horse} id={`${id}horse`} style={{
+    <div onClick={onClick && onClick(id)} className={classes.horse} id={`${id}`} style={{
       color: enemy ? "red" : "black",
       position: "absolute",
       width: 64,

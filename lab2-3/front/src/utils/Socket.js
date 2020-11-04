@@ -19,6 +19,10 @@ class Socket {
     this.notYourTurn = handler;
   }
 
+  set turnHandler(handler) {
+    this.setTurn = handler;
+  }
+
   set onOpenHandler(handler) {
     this.socket.onopen = handler;
   }
@@ -54,13 +58,16 @@ class Socket {
     if (requestId === "themeReady") {
       this.startChat();
     } else if (data.event === "chat_started") {
-      this.toUser = data.data;
+      this.toUser = data.data.enemyId;
+      this.startChat(data.data.youStart)
     } else if (data.event === "current_user_send_message") {
-      this.chatMessage("another: " + data.data)
+      this.chatMessage(data.data)
     } else if (data.event === "message_delivered") {
-      this.chatMessage("me: " + data.data)
+      // this.chatMessage(data.data)
     }else if (data.event === "not_your_turn") {
       this.notYourTurn();
+    }else if (data.event === "next_round_started") {
+      this.setTurn(data.data === "you");
     }
   }
 }
