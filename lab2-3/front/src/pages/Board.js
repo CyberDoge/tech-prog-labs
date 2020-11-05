@@ -2,10 +2,11 @@ import React, {useEffect, useState} from "react";
 import Square from "./Square";
 import Horse from "./Horse";
 import {primarySocket} from "../App";
-import {useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router";
 
 const Board = () => {
   let query = new URLSearchParams(useLocation().search);
+  const history = useHistory();
   const [turn, setTurn] = useState(false);
   const [selectedHorseId, setSelectedHorseId] = useState(null);
   const [shadowHorses, setShadowHorses] = useState([]);
@@ -13,7 +14,7 @@ const Board = () => {
   useEffect(() => {
     primarySocket.chatMessageHandler = (message) => {
       const enemyHorse = JSON.parse(message);
-      setShadowHorses(shadowHorses.filter(h=>!(h.x === enemyHorse.x && h.y === enemyHorse.y)))
+      setShadowHorses(shadowHorses.filter(h => !(h.x === enemyHorse.x && h.y === enemyHorse.y)))
       setShadowEnemyHorses(shadowEnemyHorses.slice().map(h => {
         if (h.id === enemyHorse.id) {
           return enemyHorse;
@@ -22,19 +23,21 @@ const Board = () => {
         }
       }))
     }
-    if(shadowHorses.length < 5){
-      alert("i loose")
+    if (shadowHorses.length < 5 && shadowHorses.length !== 0) {
+      alert("i loose");
+      primarySocket.sendChatMessage((res, error) => {
+      }, {data: "loose"})
+      history.push("/");
     }
   }, [shadowEnemyHorses, shadowHorses])
   useEffect(() => {
     primarySocket.notYourTurnHandler = () => {
-      alert("not your turn")
     }
     primarySocket.turnHandler = (turn) => {
       setTurn(turn);
     }
   }, [])
-  useEffect(()=>{
+  useEffect(() => {
     const first = [...new Array(8).keys()].map((index) => ({
       x: 1 - Math.floor(index * 2 / 8) + (index * 2) % 8,
       y: Math.floor((index * 2) / 8),
@@ -109,9 +112,10 @@ const Board = () => {
       }))
       sendHorse({id: selectedHorseId, x: horse.x, y: horse.y})
       setSelectedHorseId(null);
-    }
-    if(shadowEnemyHorses.length < 5){
-      alert("i loose")
+      if (shadowEnemyHorses.length === 5 && shadowEnemyHorses.length !== 0) {
+        alert("i win")
+        history.push("/");
+      }
     }
   }
   return (<div>

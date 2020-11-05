@@ -14,7 +14,7 @@ const Main = () => {
     history.push(`/chat?${youStart ? "youStart=true" : ""}`);
   }
   const getThemes = () => primarySocket.send((data) => {
-    setThemes(data.themes)
+    setThemes(data?.themes || [])
   }, "get_themes", {from: 0, count: 229});
   useEffect(() => {
     getThemes();
